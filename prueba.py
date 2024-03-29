@@ -26,7 +26,7 @@ class Grammar:
             return False
         if node[0] in self.non_terminals:
             for production in self.productions[node[0]]:
-                if self.generate_tree(word, production + tuple(node[1:]), tree):  # Convertir node[1:] a tupla
+                if self.generate_tree(word, tuple(production) + tuple(node[1:]), tree):  # Convertir node[1:] a tupla
                     tree.append((node, production))
                     return True
             return False
@@ -55,16 +55,65 @@ class Grammar:
         pos = nx.spring_layout(G)
         nx.draw(G, pos, with_labels=True, arrows=True)
         plt.show()
+def creacion_de_diccionarios(lista, matriz):
+    diccionario = {}
+    for clave, datos in zip(lista, matriz):
+        diccionario[clave] = datos
+    return diccionario
+
+def eliminar_recursion(diccionario):
+    visitado = set()
+
+    def dfs(clave, camino):
+        if clave in camino:
+            diccionario[clave] = [valor for valor in diccionario[clave] if valor != clave]
+            return
+
+        if clave in visitado:
+            return
+
+        visitado.add(clave)
+
+        for valores in diccionario.get(clave, []):
+            for valor in valores:
+                dfs(valor, camino + [clave])
+
+    def dfs_indirecta(clave, camino, diccionario):
+        if clave in camino:
+            diccionario[camino[-1]] = [v for v in diccionario[camino[-1]] if v != clave]
+            return
+
+        camino.append(clave)
+
+        for valor in diccionario.get(clave, []):
+            dfs_indirecta(valor, camino, diccionario)
+
+        camino.pop()
+
+    for clave in diccionario:
+        dfs(clave, [])
+        visitado.clear()
+        dfs_indirecta(clave, [], diccionario)
+
+    return diccionario
 
 
 def main():
-    productions = {
-        'S': [('A', 'B')],
-        'A': [('a', 'A'), ('')],
-        'B': [('b', 'B'), ('')]
-    }
+    lista_claves = ['S', 'A', 'B','C','D']
+    matriz_datos = [
+    [('A', 'B'),('S')],
+    [('a', 'A'),('B'),('A'),('C')],
+    [('b', 'B'),('A'),('B')],
+    [('c', 'C'),('D'),('A')],
+    [('d', 'D'),('A'),('C')]
+    ]   
 
-    grammar = Grammar(productions)
+    diccionario_resultante = creacion_de_diccionarios(lista_claves, matriz_datos)
+
+    # Llamar a la función para eliminar recursión en el diccionario
+    productions_corregido = eliminar_recursion(diccionario_resultante)
+
+    grammar = Grammar(productions_corregido)
     grammar.eliminate_left_recursion()
 
     print("Gramática después de eliminar la recursión izquierda:")
