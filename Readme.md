@@ -18,7 +18,7 @@ producciones = {
 arbol_derivacion = Gestor_Arbol_Derivacion()
 
 # Construir y graficar el árbol de derivación
-arbol_derivacion.create_tree('CN',producciones,'ttoxtt')
+arbol_derivacion.create_tree(Simbolo_inicial,producciones,word)
 ```
 
 ## Producciones de Ejemplo
