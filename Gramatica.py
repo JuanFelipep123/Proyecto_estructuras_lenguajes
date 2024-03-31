@@ -52,16 +52,19 @@ class Gramatica:
 
         grammar1 = nltk.CFG.fromstring(g1)
         analyzer = nltk.ChartParser(grammar1)
-        _, oracion = self.word_format(oracion, producciones, inicial, 0, inicial, '')
+        _, oracion_refact = self.word_format(oracion, producciones, inicial, 0, inicial, '')
     
-        
-        oracion_parse = oracion.split()
+        oracion_parse = oracion_refact.split()
         
         trees = analyzer.parse_one(oracion_parse)
-        if trees:
+
+        condicion = oracion_parse if oracion_parse else oracion == ''
+
+
+        if trees and condicion:
             return Tree.fromstring(str(trees))
         else:
-            return trees
+            return None
 
     def word_format(self, word, productions, symbol, position, inicial, resultado):
         """
