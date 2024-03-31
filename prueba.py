@@ -1,3 +1,19 @@
+class TreeNode:
+    def __init__(self, data):
+        self.data = data
+        self.children = []
+
+    def add_child(self, child_node):
+        self.children.append(child_node)
+
+    def __str__(self, level=0):
+        ret = "  " * level + str(self.data) + "\n"
+        for child in self.children:
+            ret += child.__str__(level + 1)
+        return ret
+
+
+
 class Grammar:
     def __init__(self, productions):
         self.productions = productions
@@ -19,21 +35,28 @@ class Grammar:
                         )
                     self.productions[new_non_terminal] = [alpha + (new_non_terminal,), ('',)]
 
-    def generate_tree(self, word, node, tree):
-        if not word:
-            return True
-        if not node:
-            return False
-        if node[0] in self.non_terminals:
-            for production in self.productions[node[0]]:
-                if self.generate_tree(word, production + tuple(node[1:]), tree):  # Convertir node[1:] a tupla
-                    tree.append((node, production))
-                    return True
-            return False
-        elif node[0] == word[0]:
-            return self.generate_tree(word[1:], node[1:], tree)
-        else:
-            return False
+    def generate_parse_tree(self, word, productions, symbol, position):
+        if position == len(word):
+            return TreeNode(symbol)
+
+        node = TreeNode(symbol)
+        for production in productions.get(symbol, []):
+            if word[position:].startswith(''.join(production)):
+                child_position = position
+                child = TreeNode(production)
+                for part in production:
+                    child_tree = self.generate_parse_tree(word, productions, part, child_position)
+                    if child_tree is not None:
+                        child.add_child(child_tree)
+                        child_position += len(part)
+                    else:
+                        break
+                else:
+                    node.add_child(child)
+        if not node.children:
+            return None
+        return node
+
 
 
     def check_word(self, word):
@@ -60,20 +83,26 @@ class Grammar:
 def main():
     productions = {
         'S': [('A', 'B')],
-        'A': [('a', 'A'), ('')],
-        'B': [('b', 'B'), ('')]
+        'A': [('a', 'A'), ('a')],
+        'B': [('b', 'B'), ('b')]
+    }
+    productions2 = {
+        'S': [('S', 'A')],
+        'A': [('a')]
     }
 
     grammar = Grammar(productions)
     grammar.eliminate_left_recursion()
+    r =grammar.generate_parse_tree('aaabb', productions, 'S', 0)
+
+    print(r)
 
     print("Gramática después de eliminar la recursión izquierda:")
     print(grammar.productions)
 
-    word = input("Ingrese una palabra para verificar si está en la gramática: ")
-    grammar.check_word(word)
+    #word = input("Ingrese una palabra para verificar si está en la gramática: ")
+    #grammar.check_word(word)
 
 
 if __name__ == "__main__":
     main()
-    
