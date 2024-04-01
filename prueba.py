@@ -3,6 +3,21 @@ class Grammar:
         self.productions = productions
         self.non_terminals = set(productions.keys())
 
+    #
+    # Método para verificar si una gramática está factorizada por la izquierda
+    #
+    def is_left_factored(grammar):
+        for non_terminal, productions in grammar.items():
+            prefixes = set()  # Conjunto para almacenar los prefijos comunes
+            for production in productions:
+                if not production:
+                    continue  # Si la producción está vacía, pasamos a la siguiente iteración
+                prefix = production[0]  # El primer símbolo de cada producción
+                if prefix in prefixes:
+                    return False  # Si encontramos un prefijo común, la gramática no está factorizada por la izquierda
+                prefixes.add(prefix)
+        return True  # Si no encontramos prefijos comunes en ningún símbolo no terminal, la gramática está factorizada por la izquierda
+
     def eliminate_left_recursion(self):
         for A in self.non_terminals:
             for i in range(len(self.productions[A])):
