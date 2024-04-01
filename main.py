@@ -77,7 +77,6 @@ def main():
     ]   
 
     diccionario_resultante = creacion_de_diccionarios(lista_claves, matriz_datos)
-    print(diccionario_resultante)
 
     # Llamar a la función para eliminar recursión en el diccionario
     productions_corregido = eliminar_recursion(diccionario_resultante)
@@ -85,11 +84,9 @@ def main():
     grammar = Grammar(productions_corregido)
     grammar.eliminate_left_recursion()
 
-    print("Gramática después de eliminar la recursión izquierda:")
-    print(grammar.productions)
 
     word = input("Ingrese una palabra para verificar si está en la gramática: ")
-    inicio_gramatica = input("Ingrese el inicio de la gramatica: ")
+    inicio_gramatica = next(iter(grammar.productions))[0]
 
     # Creacion del arbol de derivacion
     arbol_derivacion = Gestor_Arbol_Derivacion()
