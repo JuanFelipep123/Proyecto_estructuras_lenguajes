@@ -84,12 +84,9 @@ def main():
     grammar = Grammar(productions_corregido)
     grammar.eliminate_left_recursion()
 
-    inicio_gramatica = next(iter(productions_corregido.items()))[0]
-    print(inicio_gramatica)
-   
 
     word = input("Ingrese una palabra para verificar si está en la gramática: ")
-
+    inicio_gramatica = next(iter(grammar.productions))[0]
 
     # Creacion del arbol de derivacion
     arbol_derivacion = Gestor_Arbol_Derivacion()
