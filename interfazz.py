@@ -12,12 +12,18 @@ def convertir_a_diccionario(gramatica):
             partes = linea.split('->')
             no_terminal = partes[0].strip()
             producciones = partes[1].split('|')
-            producciones = [p.strip() for p in producciones]  # Eliminar espacios en blanco alrededor de las producciones
-            diccionario[no_terminal] = producciones
+            # Separar cada producción en una lista de símbolos
+            producciones_separadas = []
+            for p in producciones:
+                symbols = tuple(s.strip() for s in p)
+                producciones_separadas.append(symbols)
+            diccionario[no_terminal] = producciones_separadas
     return diccionario
+
 
 class GramaticaInterface:
     def __init__(self, master):
+        self.diccionario = {}
         self.master = master
         self.master.title("Convertir Gramática")
 
@@ -43,9 +49,9 @@ class GramaticaInterface:
     def convertir(self):
         gramatica = self.text_area.get("1.0", tk.END)
         try:
-            diccionario = convertir_a_diccionario(gramatica)
-            print(diccionario)
-            messagebox.showinfo("Resultado", "La gramática se ha convertido correctamente:\n\n{}".format(diccionario))
+            self.diccionario = convertir_a_diccionario(gramatica)
+            print(self.diccionario)
+            messagebox.showinfo("Resultado", "La gramática se ha convertido correctamente:\n\n{}".format(self.diccionario))
         except Exception as e:
             messagebox.showerror("Error", "Ocurrió un error al convertir la gramática:\n\n{}".format(e))
 
@@ -54,5 +60,5 @@ def main():
     app = GramaticaInterface(root)
     root.mainloop()
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+  #  main()

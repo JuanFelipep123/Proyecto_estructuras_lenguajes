@@ -75,8 +75,8 @@ class Grammar:
 def main():
     productions = {
         'S': [('A', 'B')],
-        'A': [('a', 'A'), ('')],
-        'B': [('b', 'B'), ('')]
+        'A': [('a', 'A'), ('a')],
+        'B': [('b', 'B'), ('b')]
     }
 
     grammar = Grammar(productions)
@@ -89,6 +89,6 @@ def main():
     grammar.check_word(word)
 
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+    #main()
     
