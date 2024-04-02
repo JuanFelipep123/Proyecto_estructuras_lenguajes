@@ -1,4 +1,9 @@
 from GestorArbolDerivacion import Gestor_Arbol_Derivacion
+import tkinter as tk
+from tkinter import messagebox
+
+from interfazz import GramaticaInterface
+
 
 
 class Grammar:
@@ -66,7 +71,8 @@ def eliminar_recursion(diccionario):
     return diccionario
 
 
-def main():
+def main(dict_gramatica):
+
     lista_claves = ['S', 'A', 'B','C','D']
     matriz_datos = [
     [('A', 'B'),('S')],
@@ -80,7 +86,7 @@ def main():
 
     # Llamar a la función para eliminar recursión en el diccionario
     productions_corregido = eliminar_recursion(diccionario_resultante)
-
+    print(dict_gramatica)
     grammar = Grammar(productions_corregido)
     grammar.eliminate_left_recursion()
 
@@ -96,5 +102,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
-    
+    root = tk.Tk()
+    app = GramaticaInterface(root)
+    main(app.diccionario)
+    root.mainloop()
