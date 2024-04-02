@@ -49,9 +49,4 @@ if __name__ == '__main__':
     }
     arbol_derivacion = Gestor_Arbol_Derivacion()
     arbol_derivacion.create_tree('CN',producciones,'ttoxtt')
-
     """
-
-
-
-
