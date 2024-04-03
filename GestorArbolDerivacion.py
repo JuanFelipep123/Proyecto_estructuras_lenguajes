@@ -39,14 +39,13 @@ class Gestor_Arbol_Derivacion:
             return None
 
 
-""" 
-------------------------- E J E M P L O ----------------------
+
 if __name__ == '__main__':
     producciones = {
         'CN': [('FN', 'CN2')],
-        'CN2': [('ox', 'FN', 'CN2'), ('')],  # Lamnbda se debe poner como un caracter vacio -> ('') 
+        'CN2': [('ox', 'FN', 'CN2'), ('',)],  # Lamnbda se debe poner como un caracter vacio -> ('') 
         'FN': [('tt',)]
     }
+    print(producciones)
     arbol_derivacion = Gestor_Arbol_Derivacion()
     arbol_derivacion.create_tree('CN',producciones,'ttoxtt')
-"""

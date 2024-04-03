@@ -34,7 +34,7 @@ def creacion_de_diccionarios(lista, matriz):
         diccionario[clave] = datos
     return diccionario
 
-def eliminar_recursion(diccionario):
+def eliminar_recursion(diccionario,word):
     visitado = set()
 
     def dfs(clave, camino):
@@ -71,8 +71,8 @@ def eliminar_recursion(diccionario):
     return diccionario
 
 
-def main(dict_gramatica):
-
+def main(dict_gramatica, word):
+    """ 
     lista_claves = ['S', 'A', 'B','C','D']
     matriz_datos = [
     [('A', 'B'),('S')],
@@ -82,27 +82,29 @@ def main(dict_gramatica):
     [('d', 'D'),('A'),('C'),('')]
     ]   
 
-    diccionario_resultante = creacion_de_diccionarios(lista_claves, matriz_datos)
+    #diccionario_resultante = creacion_de_diccionarios(lista_claves, matriz_datos)
 
     # Llamar a la función para eliminar recursión en el diccionario
-    productions_corregido = eliminar_recursion(diccionario_resultante)
-    print(dict_gramatica)
-    grammar = Grammar(productions_corregido)
-    grammar.eliminate_left_recursion()
+    #productions_corregido = eliminar_recursion(diccionario_resultante)
+    """
+    print(dict_gramatica, word)
+    grammar = Grammar(dict_gramatica)
+    #grammar.eliminate_left_recursion()
 
 
-    word = input("Ingrese una palabra para verificar si está en la gramática: ")
-    inicio_gramatica = next(iter(grammar.productions))[0]
+    inicio_gramatica = next(iter(grammar.productions))
+
+    print(inicio_gramatica)
 
     # Creacion del arbol de derivacion
     arbol_derivacion = Gestor_Arbol_Derivacion()
     #Devuelve el arbol ternario
-    arbol_ternario = arbol_derivacion.create_tree(inicio_gramatica,productions_corregido,word)
-    
+    arbol_ternario = arbol_derivacion.create_tree(inicio_gramatica,dict_gramatica,word)
 
-
+""" 
 if __name__ == "__main__":
     root = tk.Tk()
     app = GramaticaInterface(root)
-    main(app.diccionario)
+    #main(app.diccionario, app.word)
     root.mainloop()
+"""
