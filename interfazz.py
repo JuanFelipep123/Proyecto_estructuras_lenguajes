@@ -31,6 +31,16 @@ A->a
 CN->FNCN2
 CN2->oxFNCN2|λ
 FN->tt
+
+S->AB
+A->Aa|b
+B->BC|CD|Be
+C->c|d|f|Cc
+D->d
+
+AB->ABa|y
+BC->BCa|δ
+CH->CHa|1
 """
 
 class GramaticaInterface:
@@ -87,11 +97,20 @@ class GramaticaInterface:
 
     def evaluar_condicion(self):
         try:
+            print(self.diccionario)
+            print(self.word)
             condicion = self._init(self.diccionario,self.word)
             if condicion:
                 messagebox.showinfo("Info", f"{condicion}")
+            else:
+                messagebox.showerror("Error", "El arbol no se pudo crear porque la palabra no existe")
+            self.hecho_dict = False
+            self.hecho_word = False
+
         except(Exception):
-            messagebox.showerror("Error", "El arbol no se pudo crear porque la palabra no existe")
+           messagebox.showerror("Error", "El arbol no se pudo crear porque la palabra no existe")
+           self.hecho_dict = False
+           self.hecho_word = False
 
     
     def _init(self,dict_gramatica, word):

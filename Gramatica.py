@@ -1,5 +1,6 @@
 from nltk.tree import Tree
 import nltk
+from OperationGrammar import Operation_Grammar
 from TernaryTree import Ternary_Tree
 from Tree import TreeNode
 
@@ -53,9 +54,9 @@ class Gramatica:
       
         grammar1 = nltk.CFG.fromstring(g1)
         analyzer = nltk.ChartParser(grammar1)
-       
-        _, oracion_refact = self.word_format(oracion, producciones, inicial, 0, inicial, '')
-    
+        print(oracion)
+        oracion_refact = self.word_format(oracion, producciones)
+        print(oracion_refact)
         oracion_parse = oracion_refact.split()
         
         trees = analyzer.parse_one(oracion_parse)
@@ -68,45 +69,17 @@ class Gramatica:
         else:
             return None
 
-    def word_format(self, word, productions, symbol, position, inicial, resultado):
-        """
-        Formatea una palabra utilizando las producciones de una gramática.
-
-        Parámetros:
-        - word (str): Palabra que se generará a partir de las producciones.
-        - productions (dict): Diccionario que contiene las producciones de la gramática.
-        - symbol (str): Símbolo actual que se está procesando.
-        - position (int): Posición actual en la palabra.
-        - inicial (str): Símbolo inicial de la gramática.
-        - resultado (str): Cadena de caracteres que representa la palabra generada hasta el momento.
-
-        Retorna:
-        - int, str: Nueva posición y resultado actualizado.
-
-        Este método convierte las producciones de una gramática en una cadena de caracteres que representa una palabra.
-        Utiliza recursión para expandir cada símbolo no terminal en sus producciones correspondientes.
-        """
-        if position >= len(word):
-            return position, resultado
-
-        for production in productions[symbol]:
-            for part in production:
-                if part in productions:
-                    
-                    new_position, resultado = self.word_format(word, productions, part, position, inicial, resultado)
-                    position = new_position
-                else:
-                   
-                    if word[position:position + len(part)] in part:
-                        resultado += f'{part}'
-                        resultado += ' '
-                        position += len(part)
-
-                    if productions[symbol][-1] == part or position >= len(word):
-                        
-                        return position, resultado
-
-        return position, resultado
+    def word_format(self, word, productions):
+        Resultado = ''
+        position = 0
+        Terminales=Operation_Grammar.get_terminals(productions)
+        for w in word:
+            for t in Terminales:
+                if word[position:position + len(t)]== t:
+                    Resultado += f' {t} '
+                    position += len(t)
+        print(Resultado)
+        return Resultado
 
 
 

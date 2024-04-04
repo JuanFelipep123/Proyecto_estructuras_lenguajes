@@ -117,11 +117,12 @@ class Operation_Grammar:
     def get_first_key(dictionary):
         first_key = next(iter(dictionary.keys()), None)
         return first_key
-    
 
 def eliminar_recursion(dict_gramatica):
     terminales = Operation_Grammar.get_terminals(dict_gramatica)
     grammar = Operation_Grammar(Operation_Grammar.convert_to_string_lists(dict_gramatica))
     new_grammar = grammar.eliminate_left_recursion()
     new_grammar = Operation_Grammar.convert_to_tuple_lists(new_grammar,terminales)
+    print(terminales)
+    print(new_grammar)
     return new_grammar
