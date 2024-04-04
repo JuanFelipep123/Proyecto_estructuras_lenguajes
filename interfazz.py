@@ -33,7 +33,6 @@ CN2->oxFNCN2|λ
 FN->tt
 """
 
-
 class GramaticaInterface:
     def __init__(self, master):
         self.diccionario = {}
