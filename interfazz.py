@@ -1,7 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox
-import main as Main
 from Gramatica import Gramatica
+from OperationGrammar import Operation_Grammar
+import OperationGrammar
+from GestorArbolDerivacion import Gestor_Arbol_Derivacion
 
 #
 # Este código crea una ventana de Tkinter donde el usuario puede ingresar 
@@ -9,10 +11,22 @@ from Gramatica import Gramatica
 #
 
 """ 
+
+------------------------------- E J E M P L O -----------------------
+
 S->AB
 A->aA|a
 B->bB|b
 
+S->AB
+A->a|b
+B->BC|CD
+C->c|d
+D->d
+
+S->AaP
+P->b|c|d|e
+A->a
 
 CN->FNCN2
 CN2->oxFNCN2|λ
@@ -60,27 +74,43 @@ class GramaticaInterface:
 
     def convertir(self):
         gramatica = self.text_area.get("1.0", tk.END)
-        try:
-            self.diccionario = self.grammar.convertir_a_diccionario(gramatica)
-            self.hecho_dict = True
-            if(self.hecho_dict and self.hecho_word):
-                Main.main(self.diccionario,self.word)
-            messagebox.showinfo("Resultado", "La gramática se ha convertido correctamente:\n\n{}".format(self.diccionario))
-        except Exception as e:
-            messagebox.showerror("Error", "Ocurrió un error al convertir la gramática:\n\n{}".format(e))
+        self.diccionario = self.grammar.convertir_a_diccionario(gramatica)
+        self.hecho_dict = True
+        if(self.hecho_dict and self.hecho_word):
+            self.evaluar_condicion()
 
     def guardar_palabra(self):
         self.word = self.entry_palabra.get()
         self.hecho_word = True
         if(self.hecho_dict and self.hecho_word):
-            Main.main(self.diccionario,self.word)
-        messagebox.showinfo("Ingresar", f"La palabra '{self.word}' ha sido guardada con éxito.")
+            self.evaluar_condicion()
+            
+
+    def evaluar_condicion(self):
+        try:
+            condicion = self._init(self.diccionario,self.word)
+            if condicion:
+                messagebox.showinfo("Info", f"{condicion}")
+        except(Exception):
+            messagebox.showerror("Error", "El arbol no se pudo crear porque la palabra no existe")
+
+    
+    def _init(self,dict_gramatica, word):
+        grammar = Operation_Grammar(dict_gramatica)
+        if grammar.is_left_factored(dict_gramatica):
 
 
+            inicio_gramatica = next(iter(grammar.productions))
 
+            new_grammar = OperationGrammar.eliminar_recursion(dict_gramatica)
+            print(new_grammar)
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = GramaticaInterface(root)
-    root.mainloop()
+            
+            arbol_derivacion = Gestor_Arbol_Derivacion()
+           
+            arbol_ternario = arbol_derivacion.create_tree(inicio_gramatica,new_grammar,word)
+            return arbol_ternario
+        elif not grammar.is_left_factored(dict_gramatica) :
+            return 'La Gramatica no se encuentra factorizada'
+
 

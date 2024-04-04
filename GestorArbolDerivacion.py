@@ -33,12 +33,14 @@ class Gestor_Arbol_Derivacion:
             ternary_tree = self.ternary.nltk_tree_to_ternary_tree(nltk_tree)
             self.ternary.print_ternary_tree(ternary_tree)    # Imprime el árbol ternario
             self.grafico.graphic_ternary_tree(ternary_tree)
-            return ternary_tree
+            return 'El arbol se creo correctamente'
         else:
             print('No se puede crear el árbol ya que la palabra no existe en la gramática')
             return None
 
 
+""" 
+------------------------- E J E M P L O ------------------------
 
 if __name__ == '__main__':
     producciones = {
@@ -49,3 +51,4 @@ if __name__ == '__main__':
     print(producciones)
     arbol_derivacion = Gestor_Arbol_Derivacion()
     arbol_derivacion.create_tree('CN',producciones,'ttoxtt')
+"""

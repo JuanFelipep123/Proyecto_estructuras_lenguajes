@@ -1,6 +1,7 @@
 from nltk.tree import Tree
 import nltk
 from TernaryTree import Ternary_Tree
+from Tree import TreeNode
 
 class Gramatica:
     ternary = Ternary_Tree()
@@ -91,17 +92,19 @@ class Gramatica:
         for production in productions[symbol]:
             for part in production:
                 if part in productions:
-                    
+                    print(part)
                     new_position, resultado = self.word_format(word, productions, part, position, inicial, resultado)
                     position = new_position
                 else:
-                    print(word[position:position + len(part)], word, part)
-                    if word[position:position + len(part)] == part:
+                    print(part)
+                    if word[position:position + len(part)] in part:
                         resultado += f'{part}'
                         resultado += ' '
                         position += len(part)
+                        print(position, 'Posicion',len(word))
                         print(resultado)
-                    else:
+                    if productions[symbol][-1] == part or position >= len(word):
+                        
                         return position, resultado
 
         return position, resultado
@@ -120,7 +123,7 @@ class Gramatica:
                 listaProduciones = []
                 for cadena in producciones:
                     if cadena != 'λ':
-                        cadena2 = self._cadena_factorizada(lista,cadena)
+                        cadena2, cadena_word = self._cadena_factorizada(lista,cadena)
                         listaProduciones.append(cadena2)
                     else:
                         listaProduciones.append([''])
@@ -141,17 +144,25 @@ class Gramatica:
 
 
     def _cadena_factorizada(self,lista,cadena):
+        cadena2 = cadena
+        replace2 = ''
         for i in lista:
             coincidencias = sum(1 for elemento in lista if i in elemento)
         
             if coincidencias <2:
                 position = cadena.find(i)
+                if coincidencias == 1:
+                    replace2 = f'##{i}'
+                elif coincidencias == 0:
+                    replace2 = f'{i}'
             else:
                 position,i = self._encontrar_mejor(lista,i,cadena)
+                replace2 = f'##{i}'
             replace = f' {i} '
             if position != -1:
                 cadena = cadena.replace(i,replace)
-        return cadena.split()
+                cadena2 = cadena2.replace(i,replace2)
+        return cadena.split(), cadena2
 
 
 
@@ -167,3 +178,53 @@ class Gramatica:
             return cadena.find(cadena_mas_grande), cadena_mas_grande
         else:
             return -1, no_terminal
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    def generate_parse_tree(self,word, productions, symbol, position, inicial):
+        if position >= len(word):
+            return TreeNode(symbol), position
+
+        node = TreeNode(symbol)
+
+        for production in productions[symbol]:
+            for part in production:
+                
+                if part in productions:  
+                    child, new_position = self.generate_parse_tree(word, productions, part, position, inicial)
+                    node.add_child(child)  
+                    position = new_position
+                else:
+                    if word[position:position+len(part)] == part:
+                        print(symbol, part)
+                        print(part, 'salida')
+                        node.add_child(TreeNode(part))
+                        position += len(part)
+                    if productions[symbol][-1] == part or position >= len(word):
+                        return None, position 
+            
+
+        return node, position
+
+    
+        
