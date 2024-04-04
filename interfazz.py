@@ -1,25 +1,20 @@
 import tkinter as tk
-from tkinter import messagebox
-#
-# Este código crea una ventana de Tkinter donde el usuario puede ingresar 
-# la gramática en el formato estándar (cada producción separada por | y cada símbolo no terminal seguido de ->)
-#
+from tkinter import messagebox, simpledialog
+
 def convertir_a_diccionario(gramatica):
     diccionario = {}
     lineas = gramatica.split('\n')
     for linea in lineas:
-        if linea.strip():  # Ignorar líneas en blanco
+        if linea.strip():  
             partes = linea.split('->')
             no_terminal = partes[0].strip()
             producciones = partes[1].split('|')
-            # Separar cada producción en una lista de símbolos
             producciones_separadas = []
             for p in producciones:
                 symbols = tuple(s.strip() for s in p)
                 producciones_separadas.append(symbols)
             diccionario[no_terminal] = producciones_separadas
     return diccionario
-
 
 class GramaticaInterface:
     def __init__(self, master):
@@ -44,21 +39,37 @@ class GramaticaInterface:
         self.text_area.grid(row=2, column=0, columnspan=2, padx=10, pady=5)
 
         self.convert_button = tk.Button(master, text="Enviar", command=self.convertir)
-        self.convert_button.grid(row=3, column=0, columnspan=2, padx=10, pady=5)
+        self.convert_button.grid(row=3, column=0, padx=5, pady=5, sticky='e')
+
+        self.cancel_button = tk.Button(master, text="Cancelar", command=self.cancelar)
+        self.cancel_button.grid(row=3, column=1, padx=5, pady=5, sticky='w')
 
     def convertir(self):
         gramatica = self.text_area.get("1.0", tk.END)
+        self.mostrar_resultado(gramatica)
         try:
             self.diccionario = convertir_a_diccionario(gramatica)
-            print(self.diccionario)
-            messagebox.showinfo("Resultado", "La gramática se ha convertido correctamente:\n\n{}".format(self.diccionario))
         except Exception as e:
             messagebox.showerror("Error", "Ocurrió un error al convertir la gramática:\n\n{}".format(e))
+
+    def mostrar_resultado(self, gramatica):
+        resultado = messagebox.askquestion("Resultado", "¿Esta seguro que La gramática esta correcta?\n\n{}".format(gramatica), icon='info')
+        if resultado == 'yes':  # Si se hace clic en "Enviar"
+            self.enviar_informacion()
+        else:  # Si se hace clic en "Cancelar"
+            pass
+    def enviar_informacion(self):
+        # Aquí puedes enviar la información al main o realizar cualquier otra acción que desees
+        print("Enviando información al main...")
+
+    def cancelar(self):
+        self.text_area.delete("1.0", tk.END)
+        self.diccionario = {}
 
 def main():
     root = tk.Tk()
     app = GramaticaInterface(root)
     root.mainloop()
 
-#if __name__ == "__main__":
-  #  main()
+if __name__ == "__main__":
+    main()
