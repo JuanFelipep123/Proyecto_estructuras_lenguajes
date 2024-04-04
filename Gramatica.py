@@ -50,14 +50,14 @@ class Gramatica:
         sintáctico utilizando el analizador sintáctico de NLTK. Si la oración no es válida según la gramática, retorna None.
         """
         g1 = self.producciones_a_gramatica(producciones)
-        print(g1)
+      
         grammar1 = nltk.CFG.fromstring(g1)
         analyzer = nltk.ChartParser(grammar1)
-        print(oracion)
+       
         _, oracion_refact = self.word_format(oracion, producciones, inicial, 0, inicial, '')
     
         oracion_parse = oracion_refact.split()
-        print('oracion ',oracion_parse)
+        
         trees = analyzer.parse_one(oracion_parse)
 
         condicion = oracion_parse if oracion_parse else oracion == ''
@@ -92,17 +92,16 @@ class Gramatica:
         for production in productions[symbol]:
             for part in production:
                 if part in productions:
-                    print(part)
+                    
                     new_position, resultado = self.word_format(word, productions, part, position, inicial, resultado)
                     position = new_position
                 else:
-                    print(part)
+                   
                     if word[position:position + len(part)] in part:
                         resultado += f'{part}'
                         resultado += ' '
                         position += len(part)
-                        print(position, 'Posicion',len(word))
-                        print(resultado)
+
                     if productions[symbol][-1] == part or position >= len(word):
                         
                         return position, resultado
@@ -127,7 +126,6 @@ class Gramatica:
                         listaProduciones.append(cadena2)
                     else:
                         listaProduciones.append([''])
-                print(listaProduciones)
                 lista_tuplas = [tuple(sublista) for sublista in listaProduciones]
                 diccionario[no_terminal] = lista_tuplas
         return diccionario
@@ -216,8 +214,7 @@ class Gramatica:
                     position = new_position
                 else:
                     if word[position:position+len(part)] == part:
-                        print(symbol, part)
-                        print(part, 'salida')
+     
                         node.add_child(TreeNode(part))
                         position += len(part)
                     if productions[symbol][-1] == part or position >= len(word):

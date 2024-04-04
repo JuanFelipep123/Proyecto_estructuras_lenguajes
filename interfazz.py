@@ -102,7 +102,7 @@ class GramaticaInterface:
             inicio_gramatica = next(iter(grammar.productions))
 
             new_grammar = OperationGrammar.eliminar_recursion(dict_gramatica)
-            print(new_grammar)
+            
 
             
             arbol_derivacion = Gestor_Arbol_Derivacion()
